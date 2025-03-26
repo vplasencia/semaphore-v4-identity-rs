@@ -8,7 +8,7 @@ pub struct F1Field {
     pub zero: BigInt,
     order: BigInt,
     half: BigInt,
-    negone: BigInt,
+    pub negone: BigInt,
 }
 
 impl F1Field {
