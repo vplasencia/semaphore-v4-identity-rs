@@ -136,7 +136,7 @@ mod tests {
 
     #[test]
     fn test_bits() {
-        assert_eq!(bits(&BigInt::from(0)), vec![]);
+        assert_eq!(bits(&BigInt::from(0)), Vec::<u8>::new());
         assert_eq!(bits(&BigInt::from(1)), vec![1]);
         assert_eq!(bits(&BigInt::from(2)), vec![0, 1]);
         assert_eq!(bits(&BigInt::from(3)), vec![1, 1]);
