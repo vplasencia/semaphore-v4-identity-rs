@@ -146,6 +146,7 @@ mod tests {
         let result = derive_public_key(private_key);
         assert!(result.is_ok());
         let public_key = result.unwrap();
+        // println!("Point0: {}, Point1: {}", public_key.0, public_key.1);
         assert!(in_curve(&public_key));
     }
 
