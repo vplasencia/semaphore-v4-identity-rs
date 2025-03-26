@@ -1,7 +1,7 @@
 mod sqrt; 
 
 use num_bigint::BigInt;
-use utils::conversions::{big_int_to_be_bytes, le_bytes_to_big_int};
+use utils::conversions::{le_bigint_to_bytes, le_bytes_to_bigint};
 use utils::scalar;
 use crate::sqrt::tonelli_shanks;
 use utils::f1_field::F1Field;
@@ -57,22 +57,22 @@ pub fn in_curve(p: &Point) -> bool {
 }
 
 pub fn pack_point(p: &Point) -> BigInt {
-    let mut buffer = big_int_to_be_bytes(&p.1, Some(32)).unwrap();
+    let mut buffer = le_bigint_to_bytes(&p.1, Some(32)).unwrap();
     if Fr.lt(&p.0, &Fr.zero) {
         buffer[31] |= 0x80;
     }
-    le_bytes_to_big_int(&buffer)
+    le_bytes_to_bigint(&buffer)
 }
 
 pub fn unpack_point(packed: &BigInt) -> Option<Point> {
-    let mut buffer = big_int_to_be_bytes(packed, Some(32)).ok()?;
+    let mut buffer = le_bigint_to_bytes(packed, Some(32)).ok()?;
     let mut sign = false;
     if buffer[31] & 0x80 != 0 {
         sign = true;
         buffer[31] &= 0x7f;
     }
 
-    let y = le_bytes_to_big_int(&buffer);
+    let y = le_bytes_to_bigint(&buffer);
     if scalar::gt(&y, &R) {
         return None;
     }
