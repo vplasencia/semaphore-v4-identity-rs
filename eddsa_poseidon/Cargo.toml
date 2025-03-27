@@ -9,7 +9,6 @@ utils = { path = "../utils" }
 baby_jubjub = { path = "../baby_jubjub"}
 num-bigint = "0.4.6"
 hex = "0.4.3"
-poseidon-rs = "0.0.10"
 light-poseidon = "0.2.0"
 ark-bn254 = "0.4.0"
 

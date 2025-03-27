@@ -1,4 +1,4 @@
-mod util_functions;
+pub mod util_functions;
 use util_functions::{Signature, prune_buffer, hash_input};
 use baby_jubjub::{BASE8, Fr, Point, add_point, in_curve, mul_point_escalar, pack_point, SUBORDER, unpack_point};
 use utils::conversions::{le_bigint_to_bytes, le_bytes_to_bigint};

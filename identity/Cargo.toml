@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+baby_jubjub = { path = "../baby_jubjub"}
+eddsa_poseidon = { path = "../eddsa_poseidon"}
+utils = { path = "../utils" }
+num-bigint = "0.4.6"
+light-poseidon = "0.2.0"
+ark-bn254 = "0.4.0"
+rand = "0.9.0"
