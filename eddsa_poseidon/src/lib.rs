@@ -20,12 +20,14 @@ fn string_to_biguint(num_str: &str) -> BigUint {
 }
 
 pub fn poseidon5(nodes: Vec<String>) -> String {
-    let mut poseidon = Poseidon::<Fra>::new_circom(2).unwrap();
+    let mut poseidon = Poseidon::<Fra>::new_circom(5).unwrap();
 
-    let input1 = ark_bn254::Fr::from(string_to_biguint(&nodes[0]));
-    let input2 = ark_bn254::Fr::from(string_to_biguint(&nodes[1]));
+    let inputs: Vec<Fra> = nodes
+        .iter()
+        .map(|s| ark_bn254::Fr::from(string_to_biguint(s)))
+        .collect();
 
-    let hash = poseidon.hash(&[input1, input2]).unwrap();
+    let hash = poseidon.hash(&inputs).unwrap();
 
     hash.to_string()
 }
@@ -170,18 +172,18 @@ mod tests {
         assert_eq!(public_key.1, unpacked.1);
     }
 
-    // #[test]
-    // fn test_pack_and_unpack_signature() {
-    //     let private_key = b"secret";
-    //     let message = BigInt::from(2);
-    //     let signature = sign_message(private_key, &le_bigint_to_bytes(&message, Some(32)).unwrap()).unwrap();
-    //     let packed = pack_signature(&signature).unwrap();
-    //     assert_eq!(packed.len(), 64);
-    //     let unpacked = unpack_signature(&packed).unwrap();
-    //     assert_eq!(signature.r8.0, unpacked.r8.0);
-    //     assert_eq!(signature.r8.1, unpacked.r8.1);
-    //     assert_eq!(signature.s, unpacked.s);
-    // }
+    #[test]
+    fn test_pack_and_unpack_signature() {
+        let private_key = b"secret";
+        let message = BigInt::from(2);
+        let signature = sign_message(private_key, &le_bigint_to_bytes(&message, Some(32)).unwrap()).unwrap();
+        let packed = pack_signature(&signature).unwrap();
+        assert_eq!(packed.len(), 64);
+        let unpacked = unpack_signature(&packed).unwrap();
+        assert_eq!(signature.r8.0, unpacked.r8.0);
+        assert_eq!(signature.r8.1, unpacked.r8.1);
+        assert_eq!(signature.s, unpacked.s);
+    }
 
     // #[test]
     // fn test_invalid_signature_unpack() {
