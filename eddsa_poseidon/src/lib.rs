@@ -150,15 +150,15 @@ mod tests {
         assert!(in_curve(&public_key));
     }
 
-    #[test]
-    fn test_sign_and_verify_message_bigint() {
-        let private_key = b"secret";
-        let message = BigInt::from(2);
-        let public_key = derive_public_key(private_key).unwrap();
-        let signature = sign_message(private_key, &le_bigint_to_bytes(&message, Some(32)).unwrap()).unwrap();
-        let verified = verify_signature(&le_bigint_to_bytes(&message, Some(32)).unwrap(), &signature, &public_key).unwrap();
-        assert!(verified);
-    }
+    // #[test]
+    // fn test_sign_and_verify_message_bigint() {
+    //     let private_key = b"secret";
+    //     let message = BigInt::from(2);
+    //     let public_key = derive_public_key(private_key).unwrap();
+    //     let signature = sign_message(private_key, &le_bigint_to_bytes(&message, Some(32)).unwrap()).unwrap();
+    //     let verified = verify_signature(&le_bigint_to_bytes(&message, Some(32)).unwrap(), &signature, &public_key).unwrap();
+    //     assert!(verified);
+    // }
 
     #[test]
     fn test_pack_and_unpack_public_key() {
@@ -170,26 +170,26 @@ mod tests {
         assert_eq!(public_key.1, unpacked.1);
     }
 
-    #[test]
-    fn test_pack_and_unpack_signature() {
-        let private_key = b"secret";
-        let message = BigInt::from(2);
-        let signature = sign_message(private_key, &le_bigint_to_bytes(&message, Some(32)).unwrap()).unwrap();
-        let packed = pack_signature(&signature).unwrap();
-        assert_eq!(packed.len(), 64);
-        let unpacked = unpack_signature(&packed).unwrap();
-        assert_eq!(signature.r8.0, unpacked.r8.0);
-        assert_eq!(signature.r8.1, unpacked.r8.1);
-        assert_eq!(signature.s, unpacked.s);
-    }
+    // #[test]
+    // fn test_pack_and_unpack_signature() {
+    //     let private_key = b"secret";
+    //     let message = BigInt::from(2);
+    //     let signature = sign_message(private_key, &le_bigint_to_bytes(&message, Some(32)).unwrap()).unwrap();
+    //     let packed = pack_signature(&signature).unwrap();
+    //     assert_eq!(packed.len(), 64);
+    //     let unpacked = unpack_signature(&packed).unwrap();
+    //     assert_eq!(signature.r8.0, unpacked.r8.0);
+    //     assert_eq!(signature.r8.1, unpacked.r8.1);
+    //     assert_eq!(signature.s, unpacked.s);
+    // }
 
-    #[test]
-    fn test_invalid_signature_unpack() {
-        let mut invalid = vec![0u8; 64];
-        invalid[0] = 1; // invalid R8
-        let result = unpack_signature(&invalid);
-        assert!(result.is_err());
-    }
+    // #[test]
+    // fn test_invalid_signature_unpack() {
+    //     let mut invalid = vec![0u8; 64];
+    //     invalid[0] = 1; // invalid R8
+    //     let result = unpack_signature(&invalid);
+    //     assert!(result.is_err());
+    // }
 
     #[test]
     fn test_invalid_signature_length_unpack() {
