@@ -120,3 +120,66 @@ impl Identity {
         string_to_bigint(&poseidon2(public_key_strings))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_identity_random() {
+        let identity = Identity::new(None).unwrap();
+        let pk = identity.private_key();
+        assert_eq!(pk.len(), 32);
+        assert_eq!(identity.secret_scalar(), &derive_secret_scalar(&pk).unwrap());
+        assert_eq!(identity.public_key(), &derive_public_key(&pk).unwrap());
+        let public_key_strings = vec![
+            identity.public_key().0.to_string(),
+            identity.public_key().1.to_string(),
+        ];
+        let computed_commitment = string_to_bigint(&poseidon2(public_key_strings));
+        assert_eq!(identity.commitment(), &computed_commitment);
+    }
+
+    #[test]
+    fn test_identity_from_string() {
+        let pk = Some(b"secret".to_vec()).unwrap();
+        let identity = Identity::new(Some(pk.clone())).unwrap();
+        assert_eq!(identity.secret_scalar(), &derive_secret_scalar(&pk).unwrap());
+        assert_eq!(identity.public_key(), &derive_public_key(&pk).unwrap());
+        let public_key_strings = vec![
+            identity.public_key().0.to_string(),
+            identity.public_key().1.to_string(),
+        ];
+        let computed_commitment = string_to_bigint(&poseidon2(public_key_strings));
+        println!("PrivateKey: {:?}, SecretScalar: {:?}, Commitment: {:?}", identity.private_key(), identity.secret_scalar(), identity.commitment());
+        assert_eq!(identity.commitment(), &computed_commitment);
+    }
+
+    #[test]
+    fn test_identity_export_import() {
+        let identity = Identity::new(Some(b"some key".to_vec())).unwrap();
+        let exported = identity.export();
+        let imported = Identity::import(&exported).unwrap();
+        assert_eq!(imported.private_key(), identity.private_key());
+        assert_eq!(imported.secret_scalar(), identity.secret_scalar());
+        assert_eq!(imported.public_key(), identity.public_key());
+        assert_eq!(imported.commitment(), identity.commitment());
+    }
+
+    // #[test]
+    // fn test_sign_and_verify() {
+    //     let identity = Identity::new(Some(b"verify key".to_vec())).unwrap();
+    //     let msg = BigInt::from(42);
+    //     let msg_bytes = msg.to_bytes_be().1; // Convert BigInt to a byte array
+    //     let sig = identity.sign_message(&msg_bytes).unwrap();
+    //     let verification_result = Identity::verify_signature(&msg_bytes, &sig, &identity.public_key());
+    //     assert!(verification_result.unwrap_or(false));
+    // }
+
+    #[test]
+    fn test_commitment_generation() {
+        let identity = Identity::new(Some(b"commit test".to_vec())).unwrap();
+        let c = Identity::generate_commitment(&identity.public_key());
+        assert_eq!(c, identity.commitment().clone());
+    }
+} 
