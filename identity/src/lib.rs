@@ -142,16 +142,18 @@ mod tests {
 
     #[test]
     fn test_identity_from_string() {
-        let pk = Some(b"secret".to_vec()).unwrap();
-        let identity = Identity::new(Some(pk.clone())).unwrap();
-        assert_eq!(identity.secret_scalar(), &derive_secret_scalar(&pk).unwrap());
-        assert_eq!(identity.public_key(), &derive_public_key(&pk).unwrap());
+        // let private_key = "secret".as_bytes().to_vec();
+        let private_key = Some(b"secret".to_vec()).unwrap();
+        let identity = Identity::new(Some(private_key.clone())).unwrap();
+        assert_eq!(identity.secret_scalar(), &derive_secret_scalar(&private_key).unwrap());
+        assert_eq!(identity.public_key(), &derive_public_key(&private_key).unwrap());
         let public_key_strings = vec![
             identity.public_key().0.to_string(),
             identity.public_key().1.to_string(),
         ];
         let computed_commitment = string_to_bigint(&poseidon2(public_key_strings));
-        println!("PrivateKey: {:?}, SecretScalar: {:?}, Commitment: {:?}", identity.private_key(), identity.secret_scalar(), identity.commitment());
+        println!("PrivateKey: {:?}, SecretScalar: {:?}, Commitment: {:?}", String::from_utf8_lossy(identity.private_key()), identity.secret_scalar(), identity.commitment());
+        assert_eq!(String::from_utf8_lossy(identity.private_key()), "secret");
         assert_eq!(identity.commitment(), &computed_commitment);
     }
 
